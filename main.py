@@ -3,25 +3,28 @@ import numpy as np
 import pandas as pd
 import timeit
 from fractionalKnapsack import fractionalKnapsack
+from binaryKnapsack import binaryKnapsack
 from graph import generateGraph
 
 '''
     primeira coluna da tabela é referente ao W
 '''
 if __name__ == '__main__':
-    '''
-    usar abaixo para o grafico
-    '''
-    # testTabelaDeTempos = []
-    # testTableNitemsPorPeso = []
+
+    # testTabelaDeTemposFrac = []
     # testTableResultadosSolFrac = []
+    #
+    # testTableNitemsPorPeso = []
+    #
+    # testTabelaDeTemposBin = []
+    # testTableResultadosSolBin = []
 
     linha = 0
     indexTable = []
-    column = ["W", 'n', 'frac', 'tf']
+    column = ["W", 'n', 'frac', 'bin','tf', 'tb']
 
     minW= int(input('Digite o valor minimo da capacidade da mochila:'))
-    maxW = int(input('Digite o valor maximo de items:'))
+    maxW = int(input('Digite o valor maximo da capacidade da mochila:'))
     stepW = int(input('Digite o intervalo do numero de items:'))
 
     pesos = []
@@ -49,37 +52,61 @@ if __name__ == '__main__':
 
             # numeros aleatorios para os valores
             valores = np.random.randint(1, 200, n)
+            valoresCopy = valores.copy()
 
             # numeros aleatorios para os pesos
             pesos = np.random.randint(1, W, n)
+            pesosCopy = pesos.copy()
 
+            # pegando tempo de execução do script fractionalKnapsack
             start = timeit.default_timer()
             resultadoEmPesos = fractionalKnapsack(valores, pesos, W)
             final = timeit.default_timer()
 
-            time = final - start
-            temposMochilaFracionaria.append(time)
+            timeFrac = final - start
+            temposMochilaFracionaria.append(timeFrac)
 
+            # pegando o valor total na mochila, com base no array retornado.
 
-            valorTotalNaMochila = 0
-
+            valorTotalNaMochilaFrac = 0
             for index, i in enumerate(resultadoEmPesos):
-                valorTotalNaMochila += i * valores[index]
+                valorTotalNaMochilaFrac += i * valores[index]
 
+            # pegando tempo de execução do script binaryKnapsack
+            start = timeit.default_timer()
+            matrizKbinary = binaryKnapsack(valoresCopy, pesosCopy, W)
+            final = timeit.default_timer()
+
+            timeBin = final - start
+
+            # pegar o valor da mochila mais valiosa, linha abaixo corresponde a K[n][W]
+            valorTotalBin = matrizKbinary[len(valoresCopy),W]
+
+
+            '''
+             preenchendo tabela nas linhas abaixo:
+            '''
             table.at[linha, "n"] = n
-            table.at[linha, "frac"] = round(valorTotalNaMochila, 2)
-            table.at[linha, "tf"] = round(time, 12)
+            table.at[linha, "frac"] = round(valorTotalNaMochilaFrac, 2)
+            table.at[linha, "bin"] = round(valorTotalBin)
+            # table.at[linha, "w"] = valorEpeso[1]
+            table.at[linha, "tf"] = round(timeFrac, 12)
+            table.at[linha, "tb"] = round(timeBin, 12)
 
             linha = linha + 1
-            n += 5
+            # if(W == 50):
+            #     testTabelaDeTemposFrac.append(round(timeFrac, 12))
+            #     testTableResultadosSolFrac.append(round(valorTotalNaMochilaFrac, 2))
+            #
+            #     testTableNitemsPorPeso.append(n)
+            #
+            #     testTabelaDeTemposBin.append(round(timeBin, 12))
+            #     testTableResultadosSolBin.append(round(valorTotalBin, 2))
+
+            n += stepW
+    # generateGraph(testTableNitemsPorPeso, testTabelaDeTemposFrac, testTabelaDeTemposBin)
     print(table)
 '''
  as linhas abaixos estão comentadas para gerar o gráfico.
  pegando a os n valores a partir de um W espeficico, como no ex do professor no pdf
 '''
-            # if(W == 20):
-            #     testTabelaDeTempos.append(round(time, 12))
-            #     testTableNitemsPorPeso.append(n)
-            #     testTableResultadosSolFrac.append(round(resultadoEmValores, 2))
-    # generateGraph(testTableNitemsPorPeso, testTableResultadosSolFrac)
-

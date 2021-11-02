@@ -5,7 +5,7 @@ script feito para plotar o gráfico automaticamente a partir dos valores gerados
 '''
 
 
-def generateGraph(listaNitem , listX):
+def generateGraph(listaNitem , listXFrac, listXbin):
 
 
     # labels e title do gráfico definidos
@@ -15,7 +15,8 @@ def generateGraph(listaNitem , listX):
 
 
     # plotando gráfico
-    plt.plot(listaNitem, listX, label='Frac')
+    plt.plot(listaNitem, listXFrac, label='Frac')
+    plt.plot(listaNitem, listXbin, label='Bin')
 
 
     plt.legend()

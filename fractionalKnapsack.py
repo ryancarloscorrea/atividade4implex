@@ -1,18 +1,14 @@
 '''
-v = Array de valores
-w = Array de pesos
-W = Máximo de Kilos que se pode levar
-
-n = Objetos
+    fractionalKnapsack de acordo com o pseudocódigo.
 '''
 
-
 def fractionalKnapsack(v, w, W):
-    densitity = sorted(zip(v, w))
+
+    densitity = sorted(zip(w, v), key=lambda x: - x[1]/x[0])
 
     for index, pair in enumerate(densitity):
-        v[index] = pair[0]
-        w[index] = pair[1]
+        w[index] = pair[0]
+        v[index] = pair[1]
 
     x = []
 
@@ -29,16 +25,15 @@ def fractionalKnapsack(v, w, W):
         if i > len(v) - 1:
             i = len(v) - 1
             break
-
-
     if W > 0:
         x[i] = W / w[i]
     return x
 
-#para retornar o valor correto: ex = 240.0
-# v = [60,100]
-# w = [10,20]
-# result = fractionalKnapsack(v, w, W=50)
+#
+# w = [ 7,  8, 14, 11,  3,  3,  9,  9,  3,10,  1, 12, 11,  1,  8,  9,  1,  6,  9, 13,  8,  1]
+# v = [351, 195, 144, 603,  35, 435,  54, 269, 645, 235, 858, 273, 786, 809, 236, 670, 983, 643, 264, 130,190, 264]
+# W = 10
+# result = fractionalKnapsack(v, w, W)
 # final = float(0)
 # for index, i in enumerate(result):
 #     final += i * v[index]

@@ -1,37 +1,16 @@
 import numpy as np
+'''
+    binaryKnapsack de acordo com o pseudocódigo.
+'''
 def binaryKnapsack(v, w, W):
+
     n = len(v)     
-    k = np.zeros(shape=(n+1,W+1))
+    K = np.zeros(shape=(n+1,W+1)) # instaciando matriz de zero's.
 
-    for i in range(n):
-        k[i][0] = 0
-
-    for j in range(1,W):
-        k[0][j] = 0
-
-    for i in range(1,n):
-        for j in range(1,W):
-            if j < w[i]:
-                k[i][j] = k[i - 1][j]
+    for i in range(n + 1):
+        for j in range(W+1):
+            if w[i - 1] <= j:
+                K[i][j] = max(v[i-1] + K[i-1][j - w[i - 1]], K[i-1][j])
             else:
-                k[i][j] = max(k[i - 1][j], k[i - 1][j - w[i]] + v[i])
-    return k
-
-v = [60,100,120]
-w = [10,20,70]
-W = 50
-result = binaryKnapsack(v, w, W)  
-print (result)
-# final = float(0)
-
-# for index, i in enumerate(result):
-#     final += i * v[index]
-#     print(final)
-#para retornar o valor correto: ex = 240.0
-# v = [60,100]
-# w = [10,20]
-# result = fractionalKnapsack(v, w, W=50)
-# final = float(0)
-# for index, i in enumerate(result):
-#     final += i * v[index]
-# print(final)
+                K[i][j] = K[i-1][j]
+    return K
